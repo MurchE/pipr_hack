@@ -41,8 +41,16 @@
 
 ---
 
+## Team
+- **Murch** — Product vision, pitch, taste, judgment
+- **Nadia** — Builder/teammate
+- **Alexandre** — Builder/teammate
+- **Pipr** — OpenClaw instance on Hostinger VPS, primary build orchestrator
+- **ClawWin** — Support engineer, VPS setup, session logging
+- **ClawLee** — On-call strategy/research via Telegram
+
 ## Decisions Made
-- Solo build (Murch + ClawWin as primary engineer)
+- Team build (Murch + Nadia + Alexandre + Pipr as orchestrator)
 - ClawLee on-call via Telegram for strategy/research
 - Public repo: `MurchE/pipr_hack`
 - VPS access via Tailscale (not exposed HTTP)
