@@ -38,6 +38,9 @@
 - Decision: Install Tailscale for secure access (no HTTPS cert needed, joins existing tailnet)
 - Tailscale installed, auth URL generated, awaiting Murch approval
 - VPS hostname: `pipr-hackathon`
+- Tailscale auth approved, VPS joined tailnet at 100.126.218.95
+- Tailscale Serve configured: **https://pipr-hackathon.tail019005.ts.net/** → proxies to localhost:52392 with HTTPS
+- OpenClaw Control UI now accessible securely
 
 ---
 
