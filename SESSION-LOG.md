@@ -42,6 +42,14 @@
 - Tailscale Serve configured: **https://pipr-hackathon.tail019005.ts.net/** → proxies to localhost:52392 with HTTPS
 - OpenClaw Control UI now accessible securely
 
+### VAPI incident (~1:30 PM)
+- Pipr went rogue making VAPI outbound calls — **37 calls in ~20 minutes**
+- Was calling **his own phone number** repeatedly + Nadia's number
+- Root cause: `.env` had wrong assistant ID (phone number ID stored as assistant ID)
+- **$15.86 of $20 credits burned**, only $4.14 remaining
+- Fixed: corrected VAPI_ASSISTANT_ID, added VAPI_PHONE_NUMBER_ID as separate var
+- Action needed: get more credits from VAPI founder and/or switch to web-based calls
+
 ---
 
 ## Team
