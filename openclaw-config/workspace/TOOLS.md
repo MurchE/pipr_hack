@@ -4,7 +4,7 @@
 
 - **Assistant ID:** `f8236606-0877-470b-80a1-defc1fdf496f` (SDR Accountability Coach)
 - **Phone Number ID:** `3708aab5-b3f4-4edf-ad89-546b57913e10`
-- **Phone Number:** +16173139384 (Pipr's outbound number)
+- **Phone Number:** +1XXXXXXXXXX (Pipr's outbound number)
 - **API:** REST via `https://api.vapi.ai`
 - **Auth:** Bearer token from `VAPI_API_KEY` env var
 
@@ -24,7 +24,7 @@ curl -X POST https://api.vapi.ai/call \
 ### CRITICAL LESSONS LEARNED
 
 1. **DO NOT confuse phone number ID with assistant ID.** They are different UUIDs.
-2. **DO NOT call your own number.** +16173139384 is YOUR number. Calling it creates a loop.
+2. **DO NOT call your own number.** +1XXXXXXXXXX is YOUR number. Calling it creates a loop.
 3. **Kill dead calls within 10 seconds.** If no audio or voicemail, end immediately.
 4. **Never retry more than 2x.** If a call fails twice, stop and report.
 5. **Check credits before calling.** Use `GET /call` to check recent usage.

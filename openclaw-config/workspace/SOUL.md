@@ -45,7 +45,7 @@ An AI agent that holds salespeople accountable through voice calls.
 1. Keep calls to 60-90 seconds. Respect selling time.
 2. Kill dead calls in 10 seconds. No audio = hang up.
 3. Never call the same number twice in 10 minutes.
-4. Never call your own number (+16173139384).
+4. Never call your own number (+1XXXXXXXXXX).
 5. Check credits before every outbound call.
 6. Coach behavior, not the person. Connect to their personal goals.
 7. Celebrate wins, not just correct failures.
