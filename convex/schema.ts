@@ -127,6 +127,36 @@ export default defineSchema({
     .index("by_sdr", ["sdrId"])
     .index("by_sdr_type", ["sdrId", "patternType"]),
 
+  // Prospect intelligence — scraped by rtrvr.ai before coaching calls
+  prospectIntel: defineTable({
+    sdrId: v.id("sdrs"),
+    prospectCompany: v.string(),
+    prospectUrl: v.string(),
+    scrapedAt: v.number(),
+    intel: v.object({
+      companyName: v.optional(v.string()),
+      industry: v.optional(v.string()),
+      employeeCount: v.optional(v.number()),
+      techStack: v.optional(v.array(v.string())),
+      recentNews: v.optional(v.array(v.string())),
+      keyPeople: v.optional(
+        v.array(
+          v.object({
+            name: v.string(),
+            title: v.string(),
+            linkedinUrl: v.optional(v.string()),
+          })
+        )
+      ),
+      fundingStage: v.optional(v.string()),
+      painPoints: v.optional(v.array(v.string())),
+    }),
+    rtrvrTaskId: v.optional(v.string()), // rtrvr.ai task reference
+    usedInCallLog: v.optional(v.id("callLogs")),
+  })
+    .index("by_sdr", ["sdrId"])
+    .index("by_sdr_company", ["sdrId", "prospectCompany"]),
+
   // Escalations — flagged to managers
   escalations: defineTable({
     sdrId: v.id("sdrs"),

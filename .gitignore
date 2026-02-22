@@ -8,6 +8,13 @@ openclaw-config/.env
 # Session transcripts (may contain sensitive data)
 *.jsonl
 
+# Node
+node_modules/
+package-lock.json
+
+# Convex generated
+convex/_generated/
+
 # OS files
 .DS_Store
 Thumbs.db

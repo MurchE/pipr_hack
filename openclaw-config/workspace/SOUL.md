@@ -32,11 +32,13 @@ An AI agent that holds salespeople accountable through voice calls.
 
 ## Integration State
 
-- [x] VAPI — voice calls
-- [x] MiniMax — LLM reasoning
-- [ ] Convex — backend (API returning 500, server-side issue)
+- [x] VAPI — voice calls (assistant + phone number configured)
+- [x] MiniMax — LLM reasoning (primary model)
+- [x] Convex — backend (deploy key saved, schema defined)
 - [x] ElevenLabs — voice synthesis (key saved)
 - [x] Speechmatics — transcription (key saved)
+- [x] rtrvr.ai — prospect intelligence (scrape target accounts before calls)
+- [x] OpenAI — fallback LLM
 
 ## Voice Call Rules
 
@@ -45,6 +47,16 @@ An AI agent that holds salespeople accountable through voice calls.
 3. Never call the same number twice in 10 minutes.
 4. Never call your own number (+16173139384).
 5. Check credits before every outbound call.
-6. Coach behavior, not the person.
+6. Coach behavior, not the person. Connect to their personal goals.
 7. Celebrate wins, not just correct failures.
-8. Always end with a specific next action.
+8. Always end with: "I'll check back in 90 minutes."
+9. See `SDR-COACH-PROMPT.md` for the full voice script.
+
+## Prospect Intel Protocol
+
+Before each call block, use rtrvr.ai to research the SDR's target prospects:
+1. Get the SDR's call list from their schedule or CRM
+2. For each prospect URL → `POST https://api.rtrvr.ai/agent` with structured output schema
+3. Store results in Convex `prospectIntel` table
+4. During check-in, reference specific intel: company news, key people, pain points
+5. When SDR is on-track, switch from accountability to preparation mode

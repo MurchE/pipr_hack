@@ -40,11 +40,76 @@ curl https://api.vapi.ai/call -H "Authorization: Bearer $VAPI_API_KEY"
 curl https://api.vapi.ai/call/{callId} -H "Authorization: Bearer $VAPI_API_KEY"
 ```
 
+## rtrvr.ai (Prospect Intelligence)
+
+- **API:** `https://api.rtrvr.ai`
+- **Auth:** Bearer token from `RTRVR_API_KEY` env var
+- **Cost:** ~$0.12 per task
+- **Use for:** Pre-call prospect research — scraping company websites, LinkedIn profiles, news, tech stacks before SDR coaching calls
+
+### How It Fits
+
+Before each check-in call, Pipr can research the SDR's target prospects using rtrvr.ai's agent endpoint. This turns coaching from generic ("make more calls") into specific ("your next prospect Meridian Health just raised a Series C — lead with their scaling pain points").
+
+### Prospect Research Flow
+
+1. SDR shares their call list (or Pipr reads it from CRM/schedule)
+2. Pipr sends each prospect URL to rtrvr.ai's `/agent` endpoint
+3. rtrvr.ai scrapes the company website, extracts structured intel
+4. Intel stored in Convex `prospectIntel` table
+5. During check-in call, Pipr references the intel: "Before you dial Bolt Logistics, note they just partnered with DHL and are hiring 40 engineers — that's a growth signal."
+
+### API Usage
+
+```bash
+# Research a prospect company
+curl -X POST https://api.rtrvr.ai/agent \
+  -H "Authorization: Bearer $RTRVR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": "Extract company name, industry, employee count, tech stack, recent news, key decision makers, funding stage, and likely pain points",
+    "urls": ["https://targetcompany.com"],
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "companyName": {"type": "string"},
+        "industry": {"type": "string"},
+        "employeeCount": {"type": "number"},
+        "techStack": {"type": "array", "items": {"type": "string"}},
+        "recentNews": {"type": "array", "items": {"type": "string"}},
+        "keyPeople": {"type": "array", "items": {
+          "type": "object",
+          "properties": {
+            "name": {"type": "string"},
+            "title": {"type": "string"}
+          }
+        }},
+        "fundingStage": {"type": "string"},
+        "painPoints": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "response": {"verbosity": "final"}
+  }'
+```
+
+### When to Scrape
+
+- **Daily morning batch:** Before the SDR's first call block, scrape their top 5-10 target accounts
+- **On-demand:** If an SDR mentions a new prospect during a check-in, scrape it immediately
+- **Refresh:** Re-scrape accounts older than 7 days for fresh intel
+
+### Cost Control
+
+- Budget ~$1.20/day per SDR (10 prospects × $0.12)
+- Cache results in Convex — don't re-scrape the same company within 7 days
+- Prioritize high-value prospects (larger deals, upcoming meetings)
+
 ## Convex (Backend Persistence)
 
 - **Deployment:** `pipr` (murch-ewings org)
-- **Use for:** SDR profiles, schedule storage, call logs, coaching history
+- **Use for:** SDR profiles, schedule storage, call logs, coaching history, prospect intel
 - **Auth:** Deployment token in env
+- **Tables:** `sdrs`, `scheduleBlocks`, `callLogs`, `patterns`, `escalations`, `prospectIntel`
 
 ## ElevenLabs (TTS)
 
