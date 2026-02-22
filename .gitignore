@@ -1,0 +1,13 @@
+# Secrets
+.env
+openclaw-config/.env
+
+# SQLite databases
+*.sqlite
+
+# Session transcripts (may contain sensitive data)
+*.jsonl
+
+# OS files
+.DS_Store
+Thumbs.db

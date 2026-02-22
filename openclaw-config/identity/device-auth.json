@@ -1,0 +1,12 @@
+{
+  "_note": "Auto-generated auth tokens. Redacted.",
+  "version": 1,
+  "deviceId": "REDACTED",
+  "tokens": {
+    "operator": {
+      "token": "REDACTED",
+      "role": "operator",
+      "scopes": ["operator.admin", "operator.approvals", "operator.pairing"]
+    }
+  }
+}

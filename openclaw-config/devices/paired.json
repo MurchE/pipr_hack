@@ -1,0 +1,14 @@
+{
+  "_note": "Device pairing records — generated automatically on first connection. Device IDs and tokens redacted.",
+  "REDACTED_DEVICE_ID": {
+    "deviceId": "REDACTED",
+    "publicKey": "REDACTED",
+    "platform": "linux",
+    "clientId": "cli",
+    "clientMode": "cli",
+    "role": "operator",
+    "roles": ["operator"],
+    "scopes": ["operator.admin", "operator.approvals", "operator.pairing"],
+    "approvedScopes": ["operator.admin", "operator.approvals", "operator.pairing"]
+  }
+}
