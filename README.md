@@ -1,6 +1,7 @@
 # Pipr — SDR Accountability Coach
 
 DEMO: https://id-preview--cff08a73-1357-4973-8fc7-f2410d3b235d.lovable.app/
+DEMO VIDEO: https://www.loom.com/embed/7f39b3492ed146f490f5ad787a038463
 
 An AI agent that holds salespeople accountable through scheduled voice check-in calls. Built on [OpenClaw](https://openclaw.ai).
 
