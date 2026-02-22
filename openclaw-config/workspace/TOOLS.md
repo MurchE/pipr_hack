@@ -111,16 +111,77 @@ curl -X POST https://api.rtrvr.ai/agent \
 - **Auth:** Deployment token in env
 - **Tables:** `sdrs`, `scheduleBlocks`, `callLogs`, `patterns`, `escalations`, `prospectIntel`
 
-## ElevenLabs (TTS)
+## ElevenLabs (Voice Agents)
 
 - **API Key:** In `.env` as `ELEVENLABS_API_KEY`
-- **Use for:** Natural voice synthesis for coaching calls
-- **Preferred voice:** TBD — pick something warm but authoritative
+- **Integrated via:** VAPI voice pipeline (ElevenLabs is the TTS backend for outbound calls)
+- **Use for:** Natural, human-sounding coaching voice on all SDR calls
 
-## Speechmatics (Speech Recognition)
+### Voice Selection Logic
+
+Pipr uses ElevenLabs voice agents mapped to SDR preferences and regional context. The voice isn't random — it's selected to maximize trust and rapport:
+
+| SDR Region | Default Voice | Rationale |
+|-----------|---------------|-----------|
+| US West Coast | `Rachel` (warm, conversational) | Casual tech culture, avoid corporate tone |
+| US East Coast | `Adam` (confident, direct) | Matches faster-paced, results-oriented culture |
+| US South/Central | `Sarah` (friendly, steady) | Approachable, not rushed |
+| UK/EMEA | `Charlie` (articulate, measured) | Professional without being stiff |
+| APAC | `Bella` (clear, neutral accent) | High intelligibility across accents |
+
+SDRs can override the default voice during onboarding ("I want my coach to sound like X"). Voice preference is stored in the SDR profile and passed to VAPI's `voice` config on each outbound call.
+
+### Why This Matters
+
+Voice coaching lives or dies on trust. A robotic or jarring voice breaks the illusion of a real coach. ElevenLabs' low-latency streaming TTS (<300ms first-byte) keeps conversations feeling natural — no awkward pauses that remind you you're talking to a machine.
+
+The voice agent configuration is passed through VAPI's assistant config:
+```json
+{
+  "voice": {
+    "provider": "11labs",
+    "voiceId": "rachel",
+    "stability": 0.6,
+    "similarityBoost": 0.8
+  }
+}
+```
+
+## Speechmatics (Real-Time Transcription & Analysis)
 
 - **API Key:** In `.env` as `SPEECHMATICS_API_KEY`
-- **Use for:** Call transcription and analysis
+- **Integrated via:** VAPI voice pipeline (Speechmatics handles STT on the inbound audio stream)
+- **Use for:** Real-time call transcription, post-call analysis, coaching quality scoring
+
+### How It Works in the Pipeline
+
+1. **During the call:** Speechmatics processes the SDR's speech in real-time via VAPI's transcription layer. This is how Pipr "hears" what the SDR is saying — the audio stream is transcribed and fed to the LLM for deviation analysis.
+
+2. **Post-call transcript:** After each check-in, the full transcript is stored in the Convex `callLogs` table. This enables:
+   - Pattern analysis across calls (LLM reads transcripts to identify drift triggers)
+   - Coaching quality review (did Pipr's coaching actually land?)
+   - SDR sentiment tracking (tone, energy, defensiveness over time)
+
+3. **Language detection:** Speechmatics auto-detects the SDR's primary language, enabling multilingual coaching for international sales teams. Supports 50+ languages with accent-aware models.
+
+### Transcription Config
+
+Speechmatics is configured through VAPI's transcription settings:
+```json
+{
+  "transcriber": {
+    "provider": "speechmatics",
+    "language": "en",
+    "model": "enhanced",
+    "enablePartials": true,
+    "endpointing": 300
+  }
+}
+```
+
+- `enablePartials`: Stream partial transcripts so Pipr can start processing before the SDR finishes speaking
+- `endpointing: 300`: 300ms silence detection for natural turn-taking (not cutting people off)
+- `model: enhanced`: Higher accuracy model for noisy environments (SDRs on sales floors)
 
 ## MiniMax (Primary LLM)
 

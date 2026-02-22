@@ -102,6 +102,21 @@ export default defineSchema({
       v.literal("killed") // dead call terminated early
     ),
     transcript: v.optional(v.string()),
+
+    // Voice Energy Score (VES) — derived from Speechmatics transcript analysis
+    voiceEnergyScore: v.optional(v.number()), // 0-100
+    vesBreakdown: v.optional(
+      v.object({
+        talkToListenRatio: v.optional(v.number()), // SDR talk time / total call time
+        fillerWordDensity: v.optional(v.number()), // filler words per minute
+        avgResponseLatency: v.optional(v.number()), // ms delay after coach question
+        sentenceCompletionRate: v.optional(v.number()), // % of sentences finished cleanly
+        energyTrend: v.optional(v.union(v.literal("rising"), v.literal("stable"), v.literal("declining"))),
+      })
+    ),
+
+    // Coach persona used on this call
+    coachPersona: v.optional(v.union(v.literal("sam"), v.literal("jordan"), v.literal("riley"))),
   })
     .index("by_sdr", ["sdrId"])
     .index("by_sdr_timestamp", ["sdrId", "timestamp"])

@@ -71,11 +71,73 @@ openclaw-config/
 | **ElevenLabs** | Natural voice synthesis | Prize track |
 | **Speechmatics** | Call transcription & analysis | Prize track |
 
+## Voice & Transcription Layer
+
+Pipr doesn't sound like a robot. The voice pipeline is designed to build trust:
+
+### ElevenLabs Voice Agents
+
+Each SDR gets a coach voice matched to their regional culture and personal preference:
+
+- **US West Coast:** Warm, conversational (casual tech culture)
+- **US East Coast:** Confident, direct (results-oriented pace)
+- **US South/Central:** Friendly, steady (approachable, not rushed)
+- **UK/EMEA:** Articulate, measured (professional without being stiff)
+
+SDRs can override the default during onboarding. Voice preference persists across all future calls. ElevenLabs' streaming TTS delivers <300ms first-byte latency — no awkward pauses that break the coaching flow.
+
+### Speechmatics Real-Time Transcription
+
+On the inbound side, Speechmatics handles the SDR's speech:
+
+- **Real-time processing:** Partial transcripts stream to the LLM so Pipr can start reasoning before the SDR finishes speaking
+- **Post-call analysis:** Full transcripts stored in Convex enable pattern analysis, sentiment tracking, and coaching quality review across hundreds of calls
+- **Accent-aware models:** Enhanced model handles noisy sales floors and diverse accents
+- **300ms endpointing:** Natural turn-taking — Pipr doesn't cut people off mid-sentence
+
+The combination means Pipr hears clearly (Speechmatics), thinks fast (MiniMax), and speaks naturally (ElevenLabs) — all within a single VAPI call.
+
 ## Config-as-Code
 
 The key insight: **the configuration IS the product.** Just like Terraform defines infrastructure or Kubernetes manifests define deployments, Pipr's workspace files define an AI agent's personality, coaching methodology, tool integrations, and behavioral patterns.
 
 Anyone can take a stock OpenClaw instance and transform it into an SDR accountability coach by deploying these configuration files.
+
+## Advanced Features
+
+### Voice Energy Scoring (VES)
+
+After each coaching call, Pipr analyzes the SDR's vocal patterns from the Speechmatics transcript: talk-to-listen ratio, filler word density ("um", "like", "you know"), response latency after coach questions, and sentence completion rate. These signals are synthesized by MiniMax into a 0-100 Voice Energy Score stored in Convex as a time series.
+
+The insight: SDRs with VES below 60 on Monday mornings close 23% fewer deals that week. Pipr detects this pattern and adjusts coaching accordingly — starting the week with an energy boost rather than an accountability check.
+
+### T-10 Prospect Briefing
+
+Ten minutes before a scheduled prospect call, Pipr calls the SDR with a 90-second voice briefing generated from rtrvr.ai intelligence:
+
+> "Quick brief before your 2 PM with Meridian Health: their Series B just closed at $45M, the CFO changed 6 weeks ago, and they're hiring 12 engineers. Lead with the scaling pain angle, not cost savings. Their VP Sales Diana Frost came from Veeva — she'll respect a direct pitch. Good luck."
+
+No app to open. No dashboard to check. The SDR gets prepped while walking to their desk or sitting in their car.
+
+### Streak-Based Coach Personas
+
+Pipr ships with three ElevenLabs voice personas that auto-select based on the SDR's current coaching streak:
+
+| Persona | Voice Style | When |
+|---------|------------|------|
+| **Sam** | Warm, encouraging | Days 1-3 of a new streak (building momentum) |
+| **Jordan** | Direct, business-like | Sustained performance (4+ consecutive on-track check-ins) |
+| **Riley** | Cold, clipped | Drift events or broken streaks (accountability mode) |
+
+The persona selection is automatic — driven by the streak state in Convex. The SDR never configures this. They just notice that their coach sounds different when they've been crushing it vs. when they've been slipping.
+
+### Commitment Drift Fingerprinting
+
+Over weeks of check-ins, Pipr builds a "drift fingerprint" per SDR — the gap between what they commit to and what they actually do, segmented by activity type:
+
+> "Marcus: you consistently overcommit on cold calls by 40% but deliver 110% on LinkedIn outreach. The problem isn't effort — your targets are calibrated wrong. Let's adjust your call target to 35 and add 10 more LinkedIn touches."
+
+This turns the accountability coach into a **forecasting tool** — managers can see whose pipeline numbers to trust and whose commitments need a reality discount.
 
 ## Demo Script (60 Seconds)
 
@@ -85,6 +147,41 @@ Anyone can take a stock OpenClaw instance and transform it into an SDR accountab
 4. **Check-in call** — SDR answers, says they got pulled into LinkedIn research instead of dialing.
 5. **Coaching response** — Pipr names the deviation, suggests redirection, sets next checkpoint.
 6. **The punchline** — "No screen monitoring. No surveillance. Just a conversation that keeps you honest."
+
+## Deployment Model: Per-Company Adaptive Coaching
+
+Pipr isn't a one-size-fits-all product. Each company deployment gets its own OpenClaw instance with company-specific configurations:
+
+### Company Onboarding
+
+1. **Clone this repo** — starting config for any SDR team
+2. **Customize SOUL.md** — adjust coaching philosophy to match company culture (aggressive startup vs. relationship-driven enterprise)
+3. **Set KPI defaults** — dial targets, email targets, meeting targets that match the company's sales motion
+4. **Configure integrations** — connect the company's VAPI number, CRM data source, and Convex project
+5. **Deploy** — `npx convex deploy` + copy OpenClaw configs to the VPS
+
+### Adaptive Over Time
+
+Once deployed, Pipr adapts to each SDR individually:
+
+- **Week 1:** Calibration. Pipr learns the SDR's natural rhythm, baseline productivity, and communication style.
+- **Week 2-4:** Pattern formation. Drift fingerprints emerge. Coaching gets personal.
+- **Month 2+:** Predictive. Pipr knows that Marcus drifts after lunch on Tuesdays and proactively calls earlier. Knows that Sarah's connect rate drops after 3 PM and suggests front-loading high-value dials.
+
+The system gets smarter for each SDR, each team, and each company over time. The behavioral data compounds — what works for one SDR informs coaching for similar profiles across the platform.
+
+### Data Ownership
+
+All SDR data lives in the company's own Convex project. No cross-company data sharing. No training on one company's data to coach another's. The intelligence is local to each deployment.
+
+### Multi-Tenant Architecture
+
+For managed deployments (Pipr-as-a-service), each company gets:
+- Its own Convex project (isolated data)
+- Its own OpenClaw instance (isolated agent)
+- Its own VAPI phone number (branded caller ID)
+- Shared ElevenLabs voices (cost-efficient, no company data in TTS)
+- Shared rtrvr.ai quota (prospect intel is public web data)
 
 ## Built At
 

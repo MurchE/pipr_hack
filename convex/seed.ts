@@ -130,6 +130,15 @@ export const seedDemoData = mutation({
         coachingMessage: "Two meetings from 18 dials — that's a 11% connect rate. Keep that energy going into the LinkedIn block.",
         nextAction: "Start LinkedIn outreach sequence for the 6 prospects who didn't pick up",
         callStatus: "completed" as const,
+        voiceEnergyScore: 82,
+        vesBreakdown: {
+          talkToListenRatio: 0.55,
+          fillerWordDensity: 1.2,
+          avgResponseLatency: 420,
+          sentenceCompletionRate: 0.94,
+          energyTrend: "stable" as const,
+        },
+        coachPersona: "jordan" as const,
       },
       {
         timestamp: Date.now() - 7200000,
@@ -145,6 +154,15 @@ export const seedDemoData = mutation({
         coachingMessage: "12 sequences out, reply already coming in. Solid. Grab lunch and come back ready for the afternoon call block.",
         nextAction: "Lunch, then inbound follow-up calls at 1 PM",
         callStatus: "completed" as const,
+        voiceEnergyScore: 78,
+        vesBreakdown: {
+          talkToListenRatio: 0.48,
+          fillerWordDensity: 1.8,
+          avgResponseLatency: 380,
+          sentenceCompletionRate: 0.91,
+          energyTrend: "stable" as const,
+        },
+        coachPersona: "jordan" as const,
       },
     ];
 
@@ -169,6 +187,15 @@ export const seedDemoData = mutation({
         coachingMessage: "Marcus, you were supposed to be dialing this block — you committed to 20 calls. Research is useful but you can do it during your 11 AM research block tomorrow. Right now you're 20 dials behind pace. Can you knock out 10 in the next 45 minutes?",
         nextAction: "10 dials in the next 45 minutes, use the research findings as talk tracks",
         callStatus: "completed" as const,
+        voiceEnergyScore: 44,
+        vesBreakdown: {
+          talkToListenRatio: 0.32,
+          fillerWordDensity: 4.1,
+          avgResponseLatency: 890,
+          sentenceCompletionRate: 0.67,
+          energyTrend: "declining" as const,
+        },
+        coachPersona: "riley" as const,
       },
       {
         timestamp: Date.now() - 9000000,
@@ -185,6 +212,15 @@ export const seedDemoData = mutation({
         coachingMessage: "Classic LinkedIn rabbit hole — starts with one profile, ends up 30 tabs deep. Did you find anything you can actually use? If so, grab the key info and pivot back to your email sequences. You've got 15 follow-ups queued.",
         nextAction: "Close LinkedIn tabs, send 15 follow-up emails before next check-in",
         callStatus: "completed" as const,
+        voiceEnergyScore: 58,
+        vesBreakdown: {
+          talkToListenRatio: 0.38,
+          fillerWordDensity: 3.2,
+          avgResponseLatency: 720,
+          sentenceCompletionRate: 0.74,
+          energyTrend: "declining" as const,
+        },
+        coachPersona: "sam" as const,
       },
     ];
 
